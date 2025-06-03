@@ -1,106 +1,139 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<!--begin::Head-->
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Conatct Management System | Login</title>
-    <!--begin::Primary Meta Tags-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="title" content="Conatct Management System | Login" />
-    <meta name="author" content="Abhishek Gupta" />
-    <meta name="description" content="Contact Management System" />
-    <meta name="keywords" content="Contact Management System" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CMS || Login</title>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
-        integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q=" crossorigin="anonymous" />
+    <!-- Global stylesheets -->
+    <link href="{{ asset('assets/icons/icomoon/styles.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('assets/css/all.min.css') }}" id="stylesheet" rel="stylesheet" type="text/css">
+    <!-- /global stylesheets -->
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/styles/overlayscrollbars.min.css"
-        integrity="sha256-tZHrRjVqNSRyWg2wbppGnT833E/Ys0DHWGwT04GiqQg=" crossorigin="anonymous" />
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-        integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI=" crossorigin="anonymous" />
-
-    <link rel="stylesheet" href="{{ asset('css/adminlte.css') }}" />
-
+    <style type="text/css">
+        .login-page {
+            background-image: url("{{ asset('assets/images/login_bg.jpg') }}");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
 </head>
 
+<body class="bg-dark login-page">
 
-<body class="login-page bg-body-secondary">
-    <div class="login-box">
-        <div class="card card-outline card-primary">
-            <div class="card-header text-center">
-                <h1 class="link-dark link-offset-2 link-opacity-100 link-opacity-50-hover">
-                    <h1 class="mb-0"><b>Login</b></h1>
-                </h1>
+    <!-- Page content -->
+    <div class="page-content">
+
+        <!-- Main content -->
+        <div class="content-wrapper">
+
+            <!-- Inner content -->
+            <div class="content-inner">
+
+                <!-- Content area -->
+                <div class="content d-flex justify-content-center align-items-center">
+
+                    <!-- Login card -->
+                    <form class="login-form" id="login_form" method="POST" action="{{ route('login') }}" novalidate>
+                        @csrf
+                        <div class="card mb-0">
+                            <div class="card-body">
+                                <div class="text-center mb-3">
+                                    <h5 class="mb-0">Login to your account</h5>
+                                    <span class="d-block text-muted">Enter your credentials below</span>
+                                </div>
+
+                                @if ($errors->has('email') || $errors->has('password'))
+                                <div class="alert alert-danger">
+                                    {{ $errors->first('email') }} <br>
+                                    {{ $errors->first('password') }}
+                                </div>
+                                @endif
+
+                                <div class="mb-3">
+                                    <label class="form-label">Email</label>
+                                    <div class="form-control-feedback form-control-feedback-start">
+                                        <input type="email" class="form-control" placeholder="Enter Email ID"
+                                            name="email" required="required" value="{{ old('email') }}" autofocus>
+                                        <div class="form-control-feedback-icon">
+                                            <i class="icon-user text-muted"></i>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Password</label>
+                                    <div class="form-control-feedback form-control-feedback-start input-group">
+                                        <input type="password" class="form-control password"
+                                            value="{{ old('password') }}" class="form-control" placeholder="Password"
+                                            name="password" required="required">
+                                        <div class="form-control-feedback-icon">
+                                            <i class="icon-lock2 text-muted"></i>
+                                        </div>
+                                        <button class="btn btn-light changePasswordStyle" type="button">
+                                            <i class="icon-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex align-items-center mb-3">
+                                    <label class="form-check">
+                                        <input type="checkbox" name="remember" class="form-check-input" checked>
+                                        <span class="form-check-label">Remember</span>
+                                    </label>
+
+                                    <a href="login_password_recover.html" class="ms-auto">{{ __('Forgot password?')
+                                        }}</a>
+                                </div>
+
+                                <div class="mb-3">
+                                    <button type="submit" class="btn btn-pink rounded-pill w-100">
+                                        <i class="icon-arrow-right14 position-right"></i>
+                                        {{ __('Login') }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- /login card -->
+
+                </div>
+                <!-- /content area -->
+
             </div>
-            <div class="card-body login-card-body">
-                <p class="login-box-msg">Enter Credential to start your session</p>
-                @error('error')
-                <div class="text-danger mb-2">{{ $message }}</div>
-                @enderror
-                <form action="{{ route('login') }}" method="POST">
-                    @csrf
-                    <div class="row">
-                        <div class="col-md-12">
-                            <label for="email" class="form-label">Email</label>
-                            <div class="input-group has-validation mb-1">
-                                <span class="input-group-text" id="email"><span class="bi bi-envelope"></span></span>
-                                <input id="email" type="email" name="email" class="form-control"
-                                    value="{{ old('email') }}" placeholder="Email ID">
-                            </div>
-                            @error('email')
-                            <div class="text-danger mb-2">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="col-md-12">
-                            <label for="password" class="form-label">Password</label>
-                            <div class="input-group has-validation mb-1">
-                                <span class="input-group-text" id="password"><span
-                                        class="bi bi-lock-fill"></span></span>
-                                <input id="password" type="password" name="password" class="form-control"
-                                    value="{{ old('password') }}" placeholder="Password">
-                            </div>
-                            @error('password')
-                            <div class="text-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
+            <!-- /inner content -->
 
-                    </div>
-
-                    <div class="row mt-4">
-                        <div class="col-8 d-inline-flex align-items-center">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="remember" value="1"
-                                    id="remember" />
-                                <label class="form-check-label" for="remember"> Remember Me </label>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary">Sign In</button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-
-            </div>
         </div>
+        <!-- /main content -->
+
     </div>
+    <!-- /page content -->
 
-    <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.10.1/browser/overlayscrollbars.browser.es6.min.js"
-        integrity="sha256-dghWARbRe2eLlIJ56wNB+b760ywulqK3DzZYEpsg2fQ=" crossorigin="anonymous"></script>
+    <!-- Core JS files -->
+    <script src="{{ asset('assets/js/jquery/jquery.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/js/bootstrap/bootstrap.bundle.min.js') }}" type="text/javascript"></script>
+    <!-- /core JS files -->
 
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
+    <!-- Theme JS files -->
+    <script src="{{ asset('assets/js/app.js') }}" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+
+			$('.changePasswordStyle').click(function(){
+				$('.changePasswordStyle i').toggleClass('icon-eye icon-eye-blocked');
+				var password = $('.password');
+				if (password.attr("type") === "password") {
+				    	password.attr("type", "text");
+				} else {
+				   	password.attr("type", "password");
+				}
+			});
+		});
     </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous">
-    </script>
-
-    <script src="{{ asset('js/adminlte.js') }}"></script>
-
 </body>
+
 
 </html>
