@@ -14,7 +14,6 @@
     <link href="{{ asset('assets/icons/icomoon/styles.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('assets/css/all.min.css') }}" id="stylesheet" rel="stylesheet" type="text/css">
     <link href="{{ asset('assets/css/sweetalert2.css') }}" id="stylesheet" rel="stylesheet" type="text/css">
-    @yield('extracss')
 </head>
 
 <body>
@@ -137,20 +136,23 @@
     <!-- /page content -->
 
     <!-- Core JS files -->
-    <script src="{{ asset('assets/js/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('assets/js/bootstrap/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('assets/js/vendor/ui/moment/moment.min.js') }}"></script>
-    <script src="{{ asset('assets/js/vendor/pickers/daterangepicker.js') }}"></script>
-    <script src="{{ asset('assets/js/vendor/pickers/datepicker.min.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery/jquery.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/js/bootstrap/bootstrap.bundle.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/js/vendor/ui/moment/moment.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/js/vendor/pickers/daterangepicker.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/js/vendor/pickers/datepicker.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/js/vendor/tables/datatables/datatables.min.js') }}"></script>
+    <script src="{{ asset('assets/js/vendor/tables/datatables/extensions/buttons.min.js') }}"></script>
     <!-- /core JS files -->
 
     <!-- Theme JS files -->
-    <script src="{{ asset('assets/js/app.js') }}"></script>
-    <script src="{{ asset('assets/js/vendor/forms/selects/select2.min.js') }}"></script>
+    <script src="{{ asset('assets/js/app.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/js/vendor/forms/selects/select2.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/js/vendor/notifications/sweetalert2.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/js/vendor/forms/inputs/imask.min.js') }}" type="text/javascript"></script>
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js">
     </script>
-    @yield('extrajs')
+    @stack('scripts')
 </body>
 
 </html>

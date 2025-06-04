@@ -14,11 +14,14 @@ return new class extends Migration
         Schema::create('contacts', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email')->unique();
-            $table->char('phone', 12);
+            $table->string('email')->nullable();
+            $table->char('phone', 12)->nullable();
             $table->boolean('gender')->default(0)->comment('0 => male, 1 => Female');
-            $table->string('profile_image');
-
+            $table->string('profile_image')->nullable();
+            $table->string('additional_file')->nullable();
+            $table->boolean('is_merged')->default(false);
+            $table->unsignedBigInteger('merged_into_id')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
