@@ -12,52 +12,55 @@
                         <h5 class="modal-title">Add New Contact</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
-                    <form method="POST">
+                    <form method="POST" name="addContact" id="addContact" action="{{ route('store.contact') }}">
                         @csrf
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-md-12 mb-2">
                                     <label class="form-label" for="name">Name:</label>
-                                    <input type="text" placeholder="Enter Name" id="name" class="form-control">
+                                    <input type="text" placeholder="Enter Name" id="name" name="name" class="form-control">
                                 </div>
 
                                 <div class="col-md-12 mb-2">
                                     <label class="form-label" for="email">Email:</label>
-                                    <input type="email" placeholder="Enter Email ID" id="email" class="form-control">
+                                    <input type="email" placeholder="Enter Email ID" id="email" name="email" class="form-control">
                                 </div>
 
                                 <div class="col-md-12 mb-3">
                                     <label class="form-label" for="phone_number">Contact Number:</label>
-                                    <input type="text" placeholder="Enter Contact Number" class="form-control"
+                                    <input type="text" placeholder="Enter Contact Number" name="phone_number" class="form-control"
                                         id="phone_number">
                                 </div>
                                 <div class="col-md-12 mb-2">
-                                    <label class="form-label me-3">Gender:</label>  
+                                    <label class="form-label me-3">Gender:</label>
                                     <div class="form-check form-check-inline">
-                                        <input type="radio" class="form-check-input" id="male" name="gender" value="0" checked>
+                                        <input type="radio" class="form-check-input" id="male" name="gender"
+                                            value="0" checked>
                                         <label class="form-check-label" for="male">Male</label>
                                     </div>
 
                                     <div class="form-check form-check-inline">
-                                        <input type="radio" class="form-check-input" id="female" name="gender" value="1">
+                                        <input type="radio" class="form-check-input" id="female" name="gender"
+                                            value="1">
                                         <label class="form-check-label" for="female">Female</label>
                                     </div>
                                 </div>
 
                                 <div class="col-md-12 mb-3">
                                     <label class="form-label" for="profile_image">Profile Image</label>
-                                    <input type="file" class="form-control" id="profile_image" accept="image/*">
+                                    <input type="file" class="form-control" id="profile_image" name="profile_image" accept="image/*">
                                 </div>
                             </div>
 
                             <div id="custom_field">
 
                             </div>
-                            
+
                             <div class="row">
                                 <div class="col-md-12">
                                     <button type="button"
-                                        class="btn btn-outline-primary btn-labeled btn-labeled-start rounded-pill btn-sm" onclick="addNewContact()">
+                                        class="btn btn-outline-primary btn-labeled btn-labeled-start rounded-pill btn-sm"
+                                        onclick="addNewContact()">
                                         <span class="btn-labeled-icon bg-primary text-white rounded-pill">
                                             <i class="icon-plus-circle2"></i>
                                         </span>
@@ -76,7 +79,7 @@
                                 </span>
                                 Close
                             </button>
-                            <button type="button" class="btn btn-success btn-labeled btn-labeled-start rounded-pill">
+                            <button type="submit" class="btn btn-success btn-labeled btn-labeled-start rounded-pill">
                                 <span class="btn-labeled-icon bg-black bg-opacity-20 rounded-pill">
                                     <i class="icon-check"></i>
                                 </span>
@@ -122,23 +125,76 @@
 
 @push('scripts')
     {!! $dataTable->scripts(attributes: ['type' => 'module']) !!}
-    
-    <script>
 
+    <script>
         var count = 1;
 
-        $(document).ready(function(){
-            const maskPhoneElement = document.querySelector('#phone_number');
-            if (maskPhoneElement) {
-                const maskPhone = IMask(maskPhoneElement, {
-                    mask: '00-00000000'
-                });
-            }
+        $(document).ready(function() {
+            const validator = $('#addContact').validate({
+                ignore: 'input[type=hidden], .select2-search__field', // ignore hidden fields
+                errorClass: 'validation-invalid-label',
+                successClass: 'validation-valid-label',
+                validClass: 'validation-valid-label',
+                highlight: function(element, errorClass) {
+                    $(element).removeClass(errorClass);
+                },
+                unhighlight: function(element, errorClass) {
+                    $(element).removeClass(errorClass);
+                },
+                success: function(label) {
+                    label.addClass('validation-valid-label').text(
+                    'Success.'); // remove to hide Success message
+                },
+
+                // Different components require proper error label placement
+                errorPlacement: function(error, element) {
+
+                    // Input with icons and Select2
+                    if (element.hasClass('select2-hidden-accessible')) {
+                        error.appendTo(element.parent());
+                    }
+
+                    // Input group, form checks and custom controls
+                    else if (element.parents().hasClass('form-control-feedback') || element.parents()
+                        .hasClass('form-check') || element.parents().hasClass('input-group')) {
+                        error.appendTo(element.parent().parent());
+                    }
+
+                    // Other elements
+                    else {
+                        error.insertAfter(element);
+                    }
+                },
+                rules: {
+                    name: {
+                        required: true
+                    },
+                    email: {
+                        required: true,
+                        email: true
+                    },
+                    phone_number: {
+                        required: true,
+                        email: true
+                    },
+
+                },
+                messages: {
+                    name: {
+                        required: 'Please Enter Name'
+                    },
+                    email: {
+                        required: 'Please Enter Email ID',
+                        email: 'Please Enter valid Email ID'
+                    },
+                    
+                }
+            });
         })
 
-        function addNewContact(){
-            let html='';
-            
+        function addNewContact() {
+            let html = '';
+
             html += `
                     <div class="row" id="custom_field_row_${count}">
                         <div class="col-md-5 mb-2">
@@ -163,7 +219,7 @@
         }
 
         function removeCustomField(field) {
-            $('#custom_field_row_'+ field).remove();
+            $('#custom_field_row_' + field).remove();
         }
     </script>
 @endpush

@@ -141,15 +141,14 @@
     <script src="{{ asset('assets/js/vendor/ui/moment/moment.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/js/vendor/pickers/daterangepicker.js') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/js/vendor/pickers/datepicker.min.js') }}" type="text/javascript"></script>
-    <script src="{{ asset('assets/js/vendor/tables/datatables/datatables.min.js') }}"></script>
-    <script src="{{ asset('assets/js/vendor/tables/datatables/extensions/buttons.min.js') }}"></script>
+    <script src="{{ asset('assets/js/vendor/tables/datatables/datatables.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/js/vendor/tables/datatables/extensions/buttons.min.js') }}" type="text/javascript"></script>
     <!-- /core JS files -->
 
     <!-- Theme JS files -->
     <script src="{{ asset('assets/js/app.js') }}" type="text/javascript"></script>
-    <script src="{{ asset('assets/js/vendor/forms/selects/select2.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/js/vendor/notifications/sweetalert2.js') }}" type="text/javascript"></script>
-    <script src="{{ asset('assets/js/vendor/forms/inputs/imask.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/js/vendor/forms/validation/validate.min.js') }}" type="text/javascript"></script>
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js">
     </script>
     @stack('scripts')
