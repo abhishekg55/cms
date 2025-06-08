@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\ContactDataTable;
+use App\Http\Requests\ContactStoreRequest;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -27,9 +28,24 @@ class HomeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ContactStoreRequest $request)
     {
-        //
+
+        $messages = null;
+
+        if (isset($request->validator) && $request->validator->fails()) {
+
+            $messages = '<ul class="list list-unstyled">';
+
+            foreach ($request->validator->errors()->all() as $value) {
+                $messages .= '<li>' . $value . '</li>';
+            }
+            $messages .= '</ul>';
+
+            return response()->json(['message' => $messages], 422);
+        }
+
+        dd($request->all());
     }
 
     /**

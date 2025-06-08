@@ -10,6 +10,6 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::middleware('auth')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('dashboard');
-    Route::post('/store', [HomeController::class, 'store'])->name('store.contact');
+    Route::post('/store', [HomeController::class, 'store'])->name('contact.store');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
