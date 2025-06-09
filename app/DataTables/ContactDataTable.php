@@ -4,6 +4,7 @@ namespace App\DataTables;
 
 use App\Models\Contact;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
+use Illuminate\Http\JsonResponse;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Button;
@@ -19,11 +20,19 @@ class ContactDataTable extends DataTable
      *
      * @param QueryBuilder<Contact> $query Results from query() method.
      */
-    public function dataTable(QueryBuilder $query): EloquentDataTable
+    public function ajax(): JsonResponse
     {
-        return (new EloquentDataTable($query))
+        return datatables()
+            ->eloquent($this->query())
             ->addColumn('action', 'contact.action')
-            ->setRowId('id');
+            ->editColumn('profile_image', function ($query) {
+                return '<a href="#" class="d-inline-block me-3">
+                            <img src="' . storage_path($query->profile_image) . '" class="rounded-circle" width="40" height="40" alt="">
+                        </a>';
+            })
+            ->setRowId('id')
+            ->rawColumns(['action', 'profile_image'])
+            ->make(true);
     }
 
     /**
@@ -31,9 +40,10 @@ class ContactDataTable extends DataTable
      *
      * @return QueryBuilder<Contact>
      */
-    public function query(Contact $model): QueryBuilder
+    public function query(): QueryBuilder
     {
-        return $model->newQuery();
+        $query = Contact::query();
+        return $this->applyScopes($query);
     }
 
     /**

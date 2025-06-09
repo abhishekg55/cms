@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\DataTables\ContactDataTable;
 use App\Http\Requests\ContactStoreRequest;
+use App\Models\Contact;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -34,18 +35,34 @@ class HomeController extends Controller
         $messages = null;
 
         if (isset($request->validator) && $request->validator->fails()) {
-
             $messages = '<ul class="list list-unstyled">';
-
             foreach ($request->validator->errors()->all() as $value) {
                 $messages .= '<li>' . $value . '</li>';
             }
             $messages .= '</ul>';
-
             return response()->json(['message' => $messages], 422);
         }
 
-        dd($request->all());
+        $imagePath = null;
+        if ($request->hasFile('profile_image')) {
+            $imagePath = $request->file('profile_image')->store('profile_image', 'public');
+        }
+
+        $additionalFile = null;
+        if ($request->hasFile('additional_file')) {
+            $additionalFile = $request->file('additional_file')->store('additional_file', 'public');
+        }
+
+        Contact::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone_number,
+            'gender' => $request->gender,
+            'profile_image' => $imagePath,
+            'additional_file' => $additionalFile,
+        ]);
+
+        return response()->json(['message' => 'Contact added successfully!']);
     }
 
     /**

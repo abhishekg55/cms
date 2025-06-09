@@ -54,6 +54,11 @@
                                         class="text-danger">*</span></label>
                                 <input type="file" class="form-control" id="profile_image" name="profile_image">
                             </div>
+
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label" for="additional_file">Additional File (Optional)</label>
+                                <input type="file" class="form-control" id="additional_file" name="additional_file">
+                            </div>
                         </div>
 
                         <div id="custom_field">
@@ -219,7 +224,15 @@
                         contentType: false,
                         processData: false,
                         success: function(response) {
-                            console.log(response);                    
+                            swal({
+                                title: "Information",
+                                text: response.message,
+                                type: "success",
+                                allowOutsideClick: false,
+                                allowEscapeKey: false
+                            }).then(function () {
+                                location.reload(true);
+                            })                   
                         },
                         error: function(xhr) {
                             let errors = xhr.responseJSON.message;

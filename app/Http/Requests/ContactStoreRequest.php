@@ -28,9 +28,8 @@ class ContactStoreRequest extends FormRequest
             'email' => 'required|email',
             'phone_number' => 'required|digits:10',
             'gender' => 'required|min:0|max:1',
-            'profile_image' => 'required|image|mimes:png,jpg',
-            'field_names' => 'required_with:field_values|array',
-            'field_values' => 'required_with:field_names|array',
+            'profile_image' => 'required|image|mimes:png,jpg|max:2048',
+            'additional_file' => 'nullable|image|mimes:png,jpg,pdf|max:2048',
         ];
     }
 
@@ -45,8 +44,8 @@ class ContactStoreRequest extends FormRequest
             'profile_image.required' =>  'Please choose Profile Image',
             'profile_image.image' =>  'choose valid Profile Image',
             'profile_image.mimes' =>  'choose Profile Image of type JPG,PNG',
-            'field_names.required_with' => 'please enter field name',
-            'field_values.required_with' => 'please enter field value'
+            'additional_file.image' =>  'choose valid Additional File',
+            'additional_file.mimes' =>  'choose Additional File of type JPG,PNG,PDF',
         ];
     }
 
