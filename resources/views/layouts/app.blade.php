@@ -152,7 +152,7 @@
     <script src="{{ asset('assets/js/vendor/notifications/sweetalert2.js') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/js/vendor/forms/validation/validate.min.js') }}" type="text/javascript"></script>
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js">
-    </script>
+    </script> 
     @stack('scripts')
 </body>
 
