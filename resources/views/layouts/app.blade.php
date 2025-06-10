@@ -15,6 +15,7 @@
     <link href="{{ asset('assets/icons/icomoon/styles.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('assets/css/all.min.css') }}" id="stylesheet" rel="stylesheet" type="text/css">
     <link href="{{ asset('assets/css/sweetalert2.css') }}" id="stylesheet" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="//cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
 </head>
 
 <body>
@@ -145,14 +146,13 @@
     <script src="{{ asset('assets/js/vendor/tables/datatables/datatables.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/js/vendor/tables/datatables/extensions/buttons.min.js') }}" type="text/javascript">
     </script>
+     <script src="//cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
     <!-- /core JS files -->
 
     <!-- Theme JS files -->
     <script src="{{ asset('assets/js/app.js') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/js/vendor/notifications/sweetalert2.js') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/js/vendor/forms/validation/validate.min.js') }}" type="text/javascript"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js">
-    </script> 
     @stack('scripts')
 </body>
 

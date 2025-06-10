@@ -5,12 +5,8 @@ namespace App\DataTables;
 use App\Models\Contact;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Illuminate\Http\JsonResponse;
-use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
-use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
-use Yajra\DataTables\Html\Editor\Editor;
-use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
 class ContactDataTable extends DataTable
@@ -24,14 +20,48 @@ class ContactDataTable extends DataTable
     {
         return datatables()
             ->eloquent($this->query())
-            ->addColumn('action', 'contact.action')
-            ->editColumn('profile_image', function ($query) {
-                return '<a href="#" class="d-inline-block me-3">
-                            <img src="' . storage_path($query->profile_image) . '" class="rounded-circle" width="40" height="40" alt="">
-                        </a>';
+            ->addColumn('action', function($query){
+
+                $editUrl = route('contact.edit', encrypt($query->id));
+                $mergeUrl = route('contact.merge', encrypt($query->id));
+                return '<div class="dropdown">
+                            <a href="#" class="text-body" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="ph-list"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end" style="">
+                                <a href="javascript:void(0)" onclick=editContact("'.$editUrl.'") class="dropdown-item">
+                                    <i class="ph-pencil me-2"></i>
+                                    Edit
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a href="'.$mergeUrl.'" class="dropdown-item">
+                                    <i class="ph-link me-2"></i>
+                                    Merge Contact
+                                </a>
+                            </div>
+                        </div>';
+            })
+            ->editColumn('name', function ($query) {
+                return '<div class="d-flex align-items-center">
+                            <a href="' . asset('storage/' . $query->profile_image) . '" class="d-inline-block me-3" target="_blank">
+                                <img src="' . asset('storage/' . $query->profile_image) . '" class="rounded-circle" width="40" height="40" alt="'.$query->name.'">
+                            </a>
+                            <div>
+                                <a href="javascript:void(0)" class="text-body fw-semibold">'.$query->name.'</a>
+                                <div class="d-flex align-items-center text-muted fs-sm">
+                                    '.$query->email.'
+                                </div>
+                            </div>
+                        </div>';
+            })
+            ->editColumn('created_at', function($query){
+                return date('d-m-Y h:i A', strtotime($query->created_at));
+            })
+            ->editColumn('gender', function($query){
+                return $query->gender_string;
             })
             ->setRowId('id')
-            ->rawColumns(['action', 'profile_image'])
+            ->rawColumns(['action', 'name'])
             ->make(true);
     }
 
@@ -53,42 +83,16 @@ class ContactDataTable extends DataTable
     {
         return $this->builder()
             ->setTableId('contactTable')
+            ->responsive(true)
             ->columns($this->getColumns())
             ->dom('<"datatable-header"fl><"datatable-scroll"t><"datatable-footer"ip>')
             ->minifiedAjax()
             ->orderBy(1)
             ->selectStyleSingle()
-            ->buttons([
-                Button::make('excel'),
-                Button::make('csv'),
-                Button::make('pdf'),
-                Button::make('print'),
-                Button::make('reset'),
-                Button::make('reload')
-            ])
             ->parameters([
-                'buttons' => [
-                    'dom' => [
-                        'button' => [
-                            'className' => 'btn btn-success btn-flat',
-                        ],
-                    ],
-                    'buttons' => [
-                        [
-                            'extend' => 'excel',
-                            'text' => '<span class="icon-file-excel"></span> Excel',
-                        ],
-                        [
-                            'extend' => 'csv',
-                            'text' => '<span class="icon-file-excel"></span> CSV',
-                        ],
-                        [
-                            'extend' => 'pdf',
-                            'text' => '<span class="icon-file-pdf"></span> PDF',
-                        ],
-                    ],
-                ],
-            ]);;
+                'responsive' => true, // ✅ Enables responsive behavior
+                'autoWidth' => false,
+            ]);
     }
 
     /**
@@ -97,18 +101,15 @@ class ContactDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::make('id'),
-            Column::make('profile_image'),
-            Column::make('name'),
-            Column::make('email'),
-            Column::make('phone'),
-            Column::make('gender'),
-            Column::make('created_at'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)
                 ->width(60)
                 ->addClass('text-center'),
+            Column::make('name'),
+            Column::make('phone'),
+            Column::make('gender'),
+            Column::make('created_at'),
         ];
     }
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\DataTables\ContactDataTable;
 use App\Http\Requests\ContactStoreRequest;
 use App\Models\Contact;
+use Exception;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -78,7 +79,15 @@ class HomeController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        try {
+            $contact = Contact::select('name', 'email', 'contact',)->where('id', decrypt($id))->firstOrFail();
+            return response()->json(['data' => $contact, 'method' => 'editContactDetail']);
+        } catch (Exception $ex) {
+            if($ex instanceof \Illuminate\Database\Eloquent\ModelNotFoundException){
+                return response()->json(['message' => 'Contact not found!'], 422);
+            }
+            return response()->json(['message' => 'Something went wrong!'], 422);
+        }
     }
 
     /**
