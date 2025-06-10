@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Dashboard')
+@section('title', 'Custom Fields')
 
 @section('content')
 
@@ -196,7 +196,7 @@
             <div class="page-header-content border-top">
                 <div class="breadcrumb">
                     <span class="breadcrumb-item  py-2">Home</span>
-                    <span class="breadcrumb-item active py-2">Manage Contacts</span>
+                    <span class="breadcrumb-item active py-2">Manage Custom Fields</span>
                 </div>
             </div>
         </div>
@@ -204,7 +204,7 @@
 
     <div class="card">
         <div class="card-header d-flex align-items-center py-0">
-            <h6 class="py-3 mb-0">Manage Contacts</h6>
+            <h6 class="py-3 mb-0">Manage Custom Fields</h6>
             <div class="ms-auto my-auto">
                 <button type="button" class="btn btn-primary btn-labeled btn-labeled-start rounded-pill"
                     data-bs-toggle="modal" data-bs-target="#addNewContactModal">

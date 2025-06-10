@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Services\DataTable;
+use Illuminate\Support\Str;
 
 class ContactDataTable extends DataTable
 {
@@ -20,8 +21,7 @@ class ContactDataTable extends DataTable
     {
         return datatables()
             ->eloquent($this->query())
-            ->addColumn('action', function($query){
-
+            ->addColumn('action', function ($query) {
                 $editUrl = route('contact.edit', encrypt($query->id));
                 $mergeUrl = route('contact.merge', encrypt($query->id));
                 return '<div class="dropdown">
@@ -29,12 +29,12 @@ class ContactDataTable extends DataTable
                                 <i class="ph-list"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-end" style="">
-                                <a href="javascript:void(0)" onclick=editContact("'.$editUrl.'") class="dropdown-item">
+                                <a href="javascript:void(0)" onclick=editContact("' . $editUrl . '") class="dropdown-item">
                                     <i class="ph-pencil me-2"></i>
                                     Edit
                                 </a>
                                 <div class="dropdown-divider"></div>
-                                <a href="'.$mergeUrl.'" class="dropdown-item">
+                                <a href="' . $mergeUrl . '" class="dropdown-item">
                                     <i class="ph-link me-2"></i>
                                     Merge Contact
                                 </a>
@@ -44,21 +44,37 @@ class ContactDataTable extends DataTable
             ->editColumn('name', function ($query) {
                 return '<div class="d-flex align-items-center">
                             <a href="' . asset('storage/' . $query->profile_image) . '" class="d-inline-block me-3" target="_blank">
-                                <img src="' . asset('storage/' . $query->profile_image) . '" class="rounded-circle" width="40" height="40" alt="'.$query->name.'">
+                                <img src="' . asset('storage/' . $query->profile_image) . '" class="rounded-circle" width="40" height="40" alt="' . $query->name . '">
                             </a>
                             <div>
-                                <a href="javascript:void(0)" class="text-body fw-semibold">'.$query->name.'</a>
+                                <a href="javascript:void(0)" class="text-body fw-semibold">' . $query->name . '</a>
                                 <div class="d-flex align-items-center text-muted fs-sm">
-                                    '.$query->email.'
+                                    ' . $query->email . '
                                 </div>
                             </div>
                         </div>';
             })
-            ->editColumn('created_at', function($query){
+            ->editColumn('created_at', function ($query) {
                 return date('d-m-Y h:i A', strtotime($query->created_at));
             })
-            ->editColumn('gender', function($query){
+            ->editColumn('gender', function ($query) {
                 return $query->gender_string;
+            })
+            ->filterColumn('gender', function ($query, $keyword) {
+                $value = null;
+
+                // Normalize search input
+                $keyword = strtolower(trim($keyword));
+
+                if ($keyword == Str::lower('male')) {
+                    $value = 0;
+                } else {
+                    $value = 1;
+                }
+
+                if (!is_null($value)) {
+                    $query->where('gender', $value);
+                }
             })
             ->setRowId('id')
             ->rawColumns(['action', 'name'])
@@ -106,6 +122,9 @@ class ContactDataTable extends DataTable
                 ->printable(false)
                 ->width(60)
                 ->addClass('text-center'),
+            Column::make('email')
+                ->visible(false)
+                ->searchable(),
             Column::make('name'),
             Column::make('phone'),
             Column::make('gender'),

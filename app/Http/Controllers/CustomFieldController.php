@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\CustomFieldDataTable;
 use App\Models\CustomField;
 use Illuminate\Http\Request;
 
@@ -10,9 +11,9 @@ class CustomFieldController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(CustomFieldDataTable $dataTable)
     {
-        //
+        return $dataTable->render('custom-fields.index');
     }
 
     /**

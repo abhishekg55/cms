@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CustomFieldController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -10,9 +11,19 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::middleware('auth')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('dashboard');
-    Route::post('/store', [HomeController::class, 'store'])->name('contact.store');
-    Route::get('/edit/{id}', [HomeController::class, 'edit'])->name('contact.edit');
-    Route::post('/edit/{id}', [HomeController::class, 'update'])->name('contact.edit');
+
+    Route::group(['prefix' => 'contacts', 'as' => 'contact.'], function () {
+        Route::post('/store', [HomeController::class, 'store'])->name('store');
+        Route::get('/edit/{id}', [HomeController::class, 'edit'])->name('edit');
+        Route::post('/update', [HomeController::class, 'update'])->name('update');
+    });
+
+    Route::group(['prefix' => 'custom-fields', 'as' => 'custom-fields.'], function () {
+        Route::get('/', [CustomFieldController::class, 'index'])->name('index');
+        Route::post('/store', [CustomFieldController::class, 'store'])->name('store');
+        Route::get('/edit/{id}', [CustomFieldController::class, 'edit'])->name('edit');
+        Route::post('/update', [CustomFieldController::class, 'update'])->name('update');
+    });
     Route::get('/merge/{id}', [HomeController::class, 'merge'])->name('contact.merge');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });

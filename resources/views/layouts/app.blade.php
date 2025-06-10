@@ -111,6 +111,14 @@
                             </a>
                         </li>
 
+                        <li class="nav-item">
+                            <a href="{{ route('custom-fields.index') }}"
+                                class="nav-link {{ request()->is('custom-fields*') ? 'active' : '' }}">
+                                <i class="ph-computer-tower"></i>
+                                <span>Custom Fields</span>
+                            </a>
+                        </li>
+
                     </ul>
                 </div>
                 <!-- /main navigation -->
@@ -146,7 +154,7 @@
     <script src="{{ asset('assets/js/vendor/tables/datatables/datatables.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/js/vendor/tables/datatables/extensions/buttons.min.js') }}" type="text/javascript">
     </script>
-     <script src="//cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="//cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
     <!-- /core JS files -->
 
     <!-- Theme JS files -->
