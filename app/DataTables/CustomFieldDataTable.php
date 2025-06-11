@@ -4,13 +4,11 @@ namespace App\DataTables;
 
 use App\Models\CustomField;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
-use Yajra\DataTables\EloquentDataTable;
+use Illuminate\Http\JsonResponse;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
-use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
-use Yajra\DataTables\Html\Editor\Editor;
-use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
+use Illuminate\Support\Str;
 
 class CustomFieldDataTable extends DataTable
 {
@@ -19,11 +17,49 @@ class CustomFieldDataTable extends DataTable
      *
      * @param QueryBuilder<CustomField> $query Results from query() method.
      */
-    public function dataTable(QueryBuilder $query): EloquentDataTable
+    public function ajax(): JsonResponse
     {
-        return (new EloquentDataTable($query))
-            ->addColumn('action', 'customfield.action')
-            ->setRowId('id');
+        return datatables()
+            ->eloquent($this->query())
+            ->addColumn('action', function ($query) {
+                $editUrl = route('custom-fields.edit', encrypt($query->id));
+                return '<div class="dropdown">
+                            <a href="#" class="text-body" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="ph-list"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end" style="">
+                                <a href="javascript:void(0)" onclick=editCustomField("' . $editUrl . '") class="dropdown-item">
+                                    <i class="ph-pencil me-2"></i>
+                                    Edit
+                                </a>
+                            </div>
+                        </div>';
+            })
+            ->editColumn('created_at', function ($query) {
+                return date('d-m-Y h:i A', strtotime($query->created_at));
+            })
+            ->editColumn('status', function ($query) {
+                return $query->status ? 'Active' : 'Inactive';
+            })
+            ->filterColumn('status', function ($query, $keyword) {
+                $value = null;
+
+                // Normalize search input
+                $keyword = strtolower(trim($keyword));
+
+                if ($keyword == Str::lower('active')) {
+                    $value = 1;
+                } else {
+                    $value = 0;
+                }
+
+                if (!is_null($value)) {
+                    $query->where('status', $value);
+                }
+            })
+            ->setRowId('id')
+            ->rawColumns(['action'])
+            ->make(true);
     }
 
     /**
@@ -31,9 +67,10 @@ class CustomFieldDataTable extends DataTable
      *
      * @return QueryBuilder<CustomField>
      */
-    public function query(CustomField $model): QueryBuilder
+    public function query(): QueryBuilder
     {
-        return $model->newQuery();
+        $query = CustomField::query();
+        return $this->applyScopes($query);
     }
 
     /**
@@ -43,9 +80,14 @@ class CustomFieldDataTable extends DataTable
     {
         return $this->builder()
             ->setTableId('customfield-table')
+            ->dom('<"datatable-header"fl><"datatable-scroll"t><"datatable-footer"ip>')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->orderBy(1);
+            ->orderBy(1)
+            ->parameters([
+                'responsive' => true, // ✅ Enables responsive behavior
+                'autoWidth' => false,
+            ]);
     }
 
     /**
@@ -59,10 +101,10 @@ class CustomFieldDataTable extends DataTable
                 ->printable(false)
                 ->width(60)
                 ->addClass('text-center'),
-            Column::make('id'),
-            Column::make('add your columns'),
+            Column::make('field_name'),
+            Column::make('field_type'),
+            Column::make('status'),
             Column::make('created_at'),
-            Column::make('updated_at'),
         ];
     }
 
@@ -71,6 +113,6 @@ class CustomFieldDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'CustomField_' . date('YmdHis');
+        return 'CustomFields_' . date('YmdHis');
     }
 }

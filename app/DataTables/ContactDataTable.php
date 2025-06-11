@@ -104,7 +104,6 @@ class ContactDataTable extends DataTable
             ->dom('<"datatable-header"fl><"datatable-scroll"t><"datatable-footer"ip>')
             ->minifiedAjax()
             ->orderBy(1)
-            ->selectStyleSingle()
             ->parameters([
                 'responsive' => true, // ✅ Enables responsive behavior
                 'autoWidth' => false,

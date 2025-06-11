@@ -161,6 +161,14 @@
     <script src="{{ asset('assets/js/app.js') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/js/vendor/notifications/sweetalert2.js') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/js/vendor/forms/validation/validate.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/js/vendor/forms/selects/select2.min.js') }}" type="text/javascript"></script>
+    <script>
+        $(document).ready(function(){
+            $('.select').select2({
+                minimumResultsForSearch: Infinity,
+            });
+        });
+    </script>
     @stack('scripts')
 </body>
 

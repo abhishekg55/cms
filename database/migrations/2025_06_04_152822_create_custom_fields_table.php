@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('custom_fields', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('contact_id');
             $table->string('field_name');
-            $table->string('field_value');
+            $table->string('field_type');
+            $table->boolean('status')->default(true)->comment('0 => Inactive, 1 => Active');
             $table->timestamps();
         });
     }
