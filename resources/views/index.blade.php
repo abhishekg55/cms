@@ -160,7 +160,7 @@
                             <div class="col-md-12">
                                 <button type="button"
                                     class="btn btn-outline-primary btn-labeled btn-labeled-start rounded-pill btn-sm"
-                                    onclick="editContact()">
+                                    onclick="editAddContact()">
                                     <span class="btn-labeled-icon bg-primary text-white rounded-pill">
                                         <i class="icon-plus-circle2"></i>
                                     </span>
