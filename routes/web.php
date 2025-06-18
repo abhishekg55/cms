@@ -23,6 +23,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/store', [CustomFieldController::class, 'store'])->name('store');
         Route::get('/edit/{id}', [CustomFieldController::class, 'edit'])->name('edit');
         Route::post('/update', [CustomFieldController::class, 'update'])->name('update');
+        Route::post('/getCustomFields', [CustomFieldController::class, 'getCustomFields'])->name('getCustomFields');
     });
     Route::get('/merge/{id}', [HomeController::class, 'merge'])->name('contact.merge');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

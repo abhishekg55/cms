@@ -6,7 +6,10 @@ use App\DataTables\ContactDataTable;
 use App\Http\Requests\ContactStoreRequest;
 use App\Http\Requests\ContactUpdateRequest;
 use App\Models\Contact;
+use App\Models\ContactCustomFieldPivot;
+use App\Models\CustomField;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 
@@ -18,7 +21,8 @@ class HomeController extends Controller
      */
     public function index(ContactDataTable $dataTable)
     {
-        return $dataTable->render('index');
+        $customFields = CustomField::all();
+        return $dataTable->render('index', ['customFields' => json_encode($customFields)]);
     }
 
     /**
@@ -46,26 +50,52 @@ class HomeController extends Controller
             return response()->json(['message' => $messages], 422);
         }
 
-        $imagePath = null;
-        if ($request->hasFile('profile_image')) {
-            $imagePath = $request->file('profile_image')->store('profile_image', 'public');
+        try {
+
+            DB::beginTransaction();
+
+            $imagePath = null;
+            if ($request->hasFile('profile_image')) {
+                $imagePath = $request->file('profile_image')->store('profile_image', 'public');
+            }
+
+            $additionalFile = null;
+            if ($request->hasFile('additional_file')) {
+                $additionalFile = $request->file('additional_file')->store('additional_file', 'public');
+            }
+
+            $contact = Contact::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone_number,
+                'gender' => $request->gender,
+                'profile_image' => $imagePath,
+                'additional_file' => $additionalFile,
+            ]);
+
+            $contactFieldData = [];
+
+            foreach ($request->field_names as $key => $value) {
+                $contactFieldData[] = [
+                    'contact_id'  => $contact->id,
+                    'custom_field_id' => decrypt($value),
+                    'field_value' => $request->field_values[$key],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+
+            ContactCustomFieldPivot::insert($contactFieldData);
+
+            DB::commit();
+
+            return response()->json(['message' => 'Contact added successfully!']);
+        } catch (Exception $ex) {
+
+            DB::rollBack();
+            Log::info($ex->getMessage());
+            return response()->json(['message' => 'Something went wrong!'], 422);
         }
-
-        $additionalFile = null;
-        if ($request->hasFile('additional_file')) {
-            $additionalFile = $request->file('additional_file')->store('additional_file', 'public');
-        }
-
-        Contact::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone_number,
-            'gender' => $request->gender,
-            'profile_image' => $imagePath,
-            'additional_file' => $additionalFile,
-        ]);
-
-        return response()->json(['message' => 'Contact added successfully!']);
     }
 
     /**

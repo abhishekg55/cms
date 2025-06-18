@@ -116,4 +116,17 @@ class CustomFieldController extends Controller
     {
         //
     }
+
+    public function getCustomFields()
+    {
+        $customFields = CustomField::where('status', true)->orderBy('field_name')->get();
+
+        $html = '<select class="form-control select" name="field_names[]" data-placeholder="Select Field Name"> <option></option>';
+        foreach ($customFields as $key => $value) {
+
+            $html .= '<option value="' . encrypt($value['id']) . '">' . $value['field_name'] . '</option>';
+        }
+        $html .= '</select>';
+        return response()->json(['data' => $html]);
+    }
 }

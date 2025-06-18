@@ -429,26 +429,45 @@
         function addNewContact() {
             let html = '';
 
-            html += `
-                <div class="row" id="custom_field_row_${count}">
-                    <div class="col-md-5 mb-2">
-                        <label class="form-label" for="field_name${count}">Field Name</label>
-                        <input type="text" placeholder="Enter Field Name" id="field_name${count}" class="form-control" name="field_names[]">
-                    </div>
-                    <div class="col-md-5 mb-2">
-                        <label class="form-label" for="field_value${count}">Field Value</label>
-                        <input type="text" placeholder="Enter Field Value" id="field_value${count}" class="form-control" name="field_values[]">
-                    </div>
-                    <div class="col-md-2 mb-2 mt-auto">
-                        <button type="button" class="btn btn-danger btn-icon rounded-pill btn-sm" onclick="removeCustomField(${count})">
-                            <i class="icon-cross3"></i>
-                        </button>
-                    </div>
-                </div>`;
+            $.ajax({
+                url: "{{ route('custom-fields.getCustomFields') }}",
+                dataType: "json",
+                type: 'POST',
+                success: function(data) {
 
-            $('#custom_field').append(html);
+                    html += `
+                    <div class="row" id="custom_field_row_${count}">
+                        <div class="col-md-5 mb-2">
+                            <label class="form-label" for="field_name${count}">Field Name</label>
+                            ${data.data}
+                        </div>
+                        <div class="col-md-5 mb-2">
+                            <label class="form-label" for="field_value${count}">Field Value</label>
+                            <input type="text" placeholder="Enter Field Value" id="field_value${count}" class="form-control"
+                                name="field_values[]">
+                        </div>
+                        <div class="col-md-2 mb-2 mt-auto">
+                            <button type="button" class="btn btn-danger btn-icon rounded-pill btn-sm" onclick="removeCustomField(${count})">
+                                <i class="icon-cross3"></i>
+                            </button>
+                        </div>
+                    </div>`;
+                    
+                    
+                    $('#custom_field').append(html);
 
-            count++;
+                    $('.select').select2({
+                        minimumResultsForSearch: Infinity,
+                        placeholder: 'Select Field Name'
+                    });
+
+                    count++;
+                },
+                error: function(xhr) {
+                    let errors = xhr.responseJSON.message;
+                    swal("Information", errors, "error");
+                }
+            });
 
         }
 

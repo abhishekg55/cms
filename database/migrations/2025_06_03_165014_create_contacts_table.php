@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('profile_image')->nullable();
             $table->string('additional_file')->nullable();
             $table->boolean('is_merged')->default(false);
-            $table->unsignedBigInteger('merged_into_id')->nullable();
+            $table->unsignedBigInteger('merged_id')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
